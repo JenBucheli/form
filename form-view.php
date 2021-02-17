@@ -8,23 +8,23 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css"
           rel="stylesheet"/>
     <title>Order food & drinks</title>
+
+    <style>
+        footer {
+            text-align: center;
+        }
+        .error {
+            color: #FF0000;
+        }
+    </style>
+
 </head>
 <body>
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <?php
-    if (isset($_POST['email'])===true  && empty ($_POST['email'])===true) {
-        $email=$_POST['email'];
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)==true){
-        }else{
-            echo 'Not valid email';
-        }
-    }
-    ?>
 
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-</div>
+
 
 <div class="container">
     <h1>Order food in restaurant "the Personal Ham Processors"</h1>
@@ -38,14 +38,66 @@
             </li>
         </ul>
     </nav>
+    <?php
+    // define variables and begin with empty values
+    $emailErr = $streetErr = $streetNumberErr = $cityErr= $zipcodeErr='';
+    $email = $street = $streetNumber = $city = $zipcode='';
 
-    <form method="post">
+    //all inputs must be filled
+    // isset="exists"   !empty= is different than empty
+     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        /*if (empty ($_POST['email'])) {
+            $emailErr='Enter a valid E-mail';
+        }else {(filter_var($email, FILTER_VALIDATE_EMAIL));
+            $email=$_POST['email'];
+        }*/
+        if (isset($_POST['email'])== true  && empty ($_POST['email'])==false) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)==true){
+            $email=$_POST['email'];
+        }else{
+            $emailErr='Enter a valid E-mail';
+        }
+
+        if (empty($_POST['street'])) {
+            $streetErr='Street missing';
+        }else{
+            $street=$_POST['street'];
+        }
+
+        if (empty($_POST['streetNumber'])){
+            $streetNumberErr='Number missing';
+        }elseif (!is_numeric($_POST['streetNumber'])) $streetNumberErr='Just numbers allowed';
+        else{
+            $streetNumber=$_POST['streetNumber'];
+        }
+
+        if (empty($_POST['city'])){
+            $cityErr='City missing';
+        }else{
+            $city=$_POST['city'];
+        }
+
+        if (empty($_POST['zipcode'])){
+            $zipcodeErr='Zip code missing';
+        }elseif (!is_numeric($_POST['zipcode'])) $zipcodeErr = 'Just numbers allowed';
+        else{
+            $zipcode=$_POST['zipcode'];
+        }
+    }}
+    ?>
+    <form method="post" /*action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+
         <div class="form-row">
 
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
-                <input type="text" id="email" name="email" class="form-control" placeholder="Enter email"/>
-
+                <input type="text" id="email" name="email" class="form-control" placeholder="Enter email" value="<?php
+                echo htmlspecialchars($email);?>"/>
+                <span class="error">
+                    <?php
+                    echo isset($emailErr);
+                    ?>
+                </span>
             </div>
             <div></div>
         </div>
@@ -56,21 +108,45 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="street">Street:</label>
-                    <input type="text" name="street" id="street" class="form-control">
+                    <input type="text" name="street" id="street" class="form-control" value="<?php
+                    echo htmlspecialchars($street);?>"/>
+                    <span class="error">
+                    <?php
+                    echo isset($streetErr);
+                    ?>
+                </span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="streetNumber">Street number:</label>
-                    <input type="text" id="streetNumber" name="streetNumber" class="form-control">
+                    <input type="text" id="streetNumber" name="streetNumber" class="form-control" value="<?php
+                    echo htmlspecialchars($streetNumber);?>"/>
+                    <span class="error">
+                    <?php
+                    echo isset($streetNumberErr);
+                    ?>
+                </span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="city">City:</label>
-                    <input type="text" id="city" name="city" class="form-control">
+                    <input type="text" id="city" name="city" class="form-control" value="<?php
+                    echo htmlspecialchars($city);?>"/>
+                    <span class="error">
+                    <?php
+                    echo isset($cityErr);
+                    ?>
+                </span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" id="zipcode" name="zipcode" class="form-control">
+                    <input type="text" id="zipcode" name="zipcode" class="form-control" value="<?php
+                    echo htmlspecialchars($zipcode);?>"/>
+                    <span class="error">
+                    <?php
+                    echo isset($zipcodeErr);
+                    ?>
+                </span>
                 </div>
             </div>
         </fieldset>
@@ -95,10 +171,6 @@
     <footer>You already ordered <strong>&euro; <?php echo $totalValue ?></strong> in food and drinks.</footer>
 </div>
 
-<style>
-    footer {
-        text-align: center;
-    }
-</style>
+
 </body>
 </html>

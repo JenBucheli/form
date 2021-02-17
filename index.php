@@ -12,22 +12,6 @@ declare(strict_types=1);
     }
 }*/
 
-//all inputs must be filled
-// isset="exists"   !empty= is different than empty
-if (isset($_POST['email']) && !empty($_POST['email']) &&
-    isset($_POST['street']) && !empty($_POST['street']) &&
-    isset($_POST['city']) && !empty($_POST['city']) &&
-    // street number & zipcode must be numbers
-    isset($_POST['streetNumber']) && !empty($_POST['streetNumber']) && is_numeric($_POST['streetNumber']) &&
-    isset($_POST['zipcode']) && !empty($_POST['zipcode']) && is_numeric($_POST['zipcode'])) {
-    $email=$_POST['email'];
-    $street=$_POST['street'];
-    $streetNumber=$_POST['streetNumber'];
-    $city=$_POST['city'];
-    $zipcode=$_POST['zipcode'];
-    $address= $_POST['street']." ". $_POST['streetNumber'].", ".$_POST['city']." ".$_POST['city'];//Kazernelaan 3, Lint 2547
-    echo 'it works';
-}
 // mail send
     //mail(to "for me",subject , messages)
 
@@ -63,5 +47,45 @@ $products = [
 ];
 
 $totalValue = 0;
+
+// define variables and begin with empty values
+$emailErr = $streetErr = $streetNumberErr = $cityErr= $zipcodeErr='';
+$email = $street = $streetNumber = $city = $zipcode='';
+
+//all inputs must be filled
+// isset="exists"   !empty= is different than empty
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty ($_POST['email'])) {
+        $emailErr='Enter a valid E-mail';
+    }else {(filter_var($email, FILTER_VALIDATE_EMAIL)==true);
+        $email=$_POST['email'];
+    }
+
+    if (empty($_POST['street'])) {
+        $streetErr='Street missing';
+    }else{
+        $street=$_POST['street'];
+    }
+
+    if (empty($_POST['streetNumber'])){
+        $streetNumberErr='Number missing';
+    }elseif (!is_numeric($_POST['streetNumber'])) $streetNumberErr='Just numbers allowed';
+    else{
+        $streetNumber=$_POST['streetNumber'];
+    }
+
+    if (empty($_POST['city'])){
+        $cityErr='City missing';
+    }else{
+        $city=$_POST['city'];
+    }
+
+    if (empty($_POST['zipcode'])){
+        $zipcodeErr='Zip code missing';
+    }elseif (!is_numeric($_POST['zipcode'])) $zipcodeErr = 'Just numbers allowed';
+    else{
+        $zipcode=$_POST['zipcode'];
+    }
+}
 
 require 'form-view.php';
