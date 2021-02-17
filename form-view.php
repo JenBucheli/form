@@ -10,6 +10,22 @@
     <title>Order food & drinks</title>
 </head>
 <body>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <?php
+    if (isset($_POST['email'])===true  && empty ($_POST['email'])===true) {
+        $email=$_POST['email'];
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)==true){
+        }else{
+            echo 'Not valid email';
+        }
+    }
+    ?>
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <div class="container">
     <h1>Order food in restaurant "the Personal Ham Processors"</h1>
     <nav>
@@ -22,11 +38,14 @@
             </li>
         </ul>
     </nav>
+
     <form method="post">
         <div class="form-row">
+
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
-                <input type="text" id="email" name="email" class="form-control"/>
+                <input type="text" id="email" name="email" class="form-control" placeholder="Enter email"/>
+
             </div>
             <div></div>
         </div>
@@ -40,8 +59,8 @@
                     <input type="text" name="street" id="street" class="form-control">
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="streetnumber">Street number:</label>
-                    <input type="text" id="streetnumber" name="streetnumber" class="form-control">
+                    <label for="streetNumber">Street number:</label>
+                    <input type="text" id="streetNumber" name="streetNumber" class="form-control">
                 </div>
             </div>
             <div class="form-row">
